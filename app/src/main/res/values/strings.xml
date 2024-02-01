@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PokeApi</string>
+    <string name="find_pokemon">Encuentra un Pokemon</string>
+    <string name="oops_no_internet">Hay problemas de conexión, \nintenta de nuevo</string>
+</resources>
