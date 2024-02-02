@@ -2,4 +2,15 @@
     <string name="app_name">PokeApi</string>
     <string name="find_pokemon">Encuentra un Pokemon</string>
     <string name="oops_no_internet">Hay problemas de conexión, \nintenta de nuevo</string>
+    <string name="empty_list">No se encontraron resultados</string>
+    <string name="stats">Estadisticas</string>
+    <string name="about">Acerca de</string>
+    <string name="evolution">Evolución</string>
+
+    <string name="weight">Peso</string>
+    <string name="height">Altura</string>
+    <string name="abilities">Habilidades</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

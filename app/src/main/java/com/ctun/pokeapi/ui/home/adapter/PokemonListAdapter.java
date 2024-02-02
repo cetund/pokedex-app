@@ -1,11 +1,11 @@
-package com.ctun.pokeapi.ui.adapter;
+package com.ctun.pokeapi.ui.home.adapter;
 
-import static com.ctun.pokeapi.utils.Constants.POKEMON_IMAGES_URL;
 import static com.ctun.pokeapi.utils.Constants.POKEMON_IMAGES_URL_HD;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,24 +21,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ctun.pokeapi.R;
-import com.ctun.pokeapi.data.model.PokemonGetAll;
+import com.ctun.pokeapi.data.model.PokemonList;
 import com.ctun.pokeapi.data.model.Results;
 import com.ctun.pokeapi.databinding.PokemonListItemBinding;
 
-import java.util.List;
 import java.util.Locale;
 
 public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.ViewHolder> {
 
-    private PokemonGetAll mValues;
+    private PokemonList mValues;
     private final Context mContext;
+    private OnClickPokemonLister mOnClickPokemonLister;
 
-    public PokemonListAdapter(Context context, PokemonGetAll items) {
+    public PokemonListAdapter(Context context, PokemonList items, OnClickPokemonLister onClickPokemonLister) {
+        mOnClickPokemonLister = onClickPokemonLister;
         mValues = items;
         mContext = context;
     }
@@ -53,11 +53,14 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Results item = mValues.getResultsList().get(holder.getAdapterPosition());
-
+        holder.mParent.setOnClickListener(view -> {
+            mOnClickPokemonLister.goDetail(holder.getAdapterPosition());
+        });
         holder.mPokemonName.setText(item.getName().toUpperCase(Locale.getDefault()));
-
+        int positionAux = item.getId() == 0 ? (holder.getAdapterPosition() + 1) : item.getId();
+        holder.mPokemonId.setText("#" + positionAux);
         Glide.with(mContext)
-                .load(POKEMON_IMAGES_URL_HD + (holder.getAdapterPosition() + 1) + ".png")
+                .load(POKEMON_IMAGES_URL_HD + (positionAux) + ".png")
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
@@ -75,7 +78,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
                         Bitmap bitmap  = drawable.getBitmap();
                         Palette.from(bitmap).generate(palette -> {
                             int color = palette.getDominantColor(ContextCompat.getColor(mContext, R.color.md_white_1000));
-                            holder.mParent.setCardBackgroundColor(color);
+                            holder.mBackground.setCardBackgroundColor(color);
                         });
 
                         return false;
@@ -91,14 +94,14 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
         this.mValues.getResultsList().add(pokemon);
         notifyItemInserted(this.mValues.getResultsList().size() - 1);
     }
-    public void setData(PokemonGetAll data){
+    public void setData(PokemonList data){
        for(Results pokemon : data.getResultsList()){
            addPokemon(pokemon);
        }
     }
     @Override
     public int getItemCount() {
-        if(mValues!=null){
+        if(mValues.getResultsList()!=null){
             return mValues.getResultsList().size();
         }else{
             return 0;
@@ -108,18 +111,26 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageViewCover;
         public TextView mPokemonName;
-        public CardView mParent;
+        public TextView mPokemonId;
+        public ConstraintLayout mParent;
+        public CardView mBackground;
         public ViewHolder(PokemonListItemBinding binding) {
             super(binding.getRoot());
             mImageViewCover = binding.pokemonImage;
             mPokemonName = binding.tvPokemonName;
-            mParent = binding.cardContainer;
+            mParent = binding.parentLyt;
+            mPokemonId = binding.tvId;
+            mBackground = binding.cardContainer;
         }
+
     }
 
-    public PokemonGetAll getMoviesList(){
+    public PokemonList getMoviesList(){
         return mValues;
     }
 
+    public interface OnClickPokemonLister{
+        void goDetail(int position);
+    }
 
 }

@@ -4,10 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PokemonGetAll {
+public class PokemonList {
 
+    @SerializedName("next")
+    String next;
     @SerializedName("results")
     List<Results> resultsList;
+
+    public String getNext() {
+        return next;
+    }
+
+    public void setNext(String next) {
+        this.next = next;
+    }
 
     public List<Results> getResultsList() {
         return resultsList;

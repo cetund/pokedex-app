@@ -3,6 +3,8 @@ package com.ctun.pokeapi.data.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Results {
+    @SerializedName("id")
+    private int id;
     @SerializedName("name")
     private String name;
 
@@ -23,5 +25,13 @@ public class Results {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,7 +1,8 @@
 package com.ctun.pokeapi.data.network;
 
 import com.ctun.pokeapi.data.model.PokemonDetail;
-import com.ctun.pokeapi.data.model.PokemonGetAll;
+import com.ctun.pokeapi.data.model.PokemonList;
+import com.ctun.pokeapi.data.model.Results;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -10,8 +11,11 @@ import retrofit2.http.Query;
 
 public interface PokemonApiClient {
     @GET("pokemon?limit=10")
-    Call<PokemonGetAll> getPokemonList(@Query("offset") int offset);
+    Call<PokemonList> getPokemonList(@Query("offset") int offset);
 
     @GET("pokemon/{id}/")
     Call<PokemonDetail> getPokemonDetail(@Path("id") int id);
+
+    @GET("pokemon/{name}/")
+    Call<Results> searchPokemon(@Path("name") String name);
 }

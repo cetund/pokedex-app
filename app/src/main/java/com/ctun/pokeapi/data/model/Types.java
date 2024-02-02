@@ -2,7 +2,9 @@ package com.ctun.pokeapi.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PokemonTypes {
+import java.io.Serializable;
+
+public class Types implements Serializable {
     @SerializedName("type")
     PokemonType type;
 
