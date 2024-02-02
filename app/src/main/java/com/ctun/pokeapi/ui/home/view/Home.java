@@ -3,6 +3,7 @@ package com.ctun.pokeapi.ui.home.view;
 import static android.nfc.NfcAdapter.EXTRA_ID;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -16,6 +17,7 @@ import com.ctun.pokeapi.databinding.ActivityHomeBinding;
 import com.ctun.pokeapi.ui.home.adapter.PokemonListAdapter;
 import com.ctun.pokeapi.ui.detailpokemon.view.PokemonDetailActivity;
 import com.ctun.pokeapi.ui.home.viewmodel.HomeViewModel;
+import com.ctun.pokeapi.utils.MultiClickPreventer;
 import com.ctun.pokeapi.utils.PaginationScrollListener;
 
 import java.util.Locale;
@@ -74,13 +76,18 @@ public class Home extends AppCompatActivity {
         viewModel.onCreate();
         viewModel.getPokemonListData().observe(this, response -> {
             if (listAdapter == null) {
-                listAdapter = new PokemonListAdapter(this, response, position -> {
-                    Log.d("adapter", "clicked");
+                listAdapter = new PokemonListAdapter(this, response, (view, position, imageView) -> {
+                    MultiClickPreventer.preventMultiClick(view);
+
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                            imageView,
+                            "imageMain");
 
                     Intent detail = new Intent(Home.this, PokemonDetailActivity.class);
-                    detail.putExtra(EXTRA_ID,  (position + 1));
-                    startActivity(detail);
+                    detail.putExtra(EXTRA_ID,  (position));
+                    startActivity(detail, activityOptionsCompat.toBundle());
                 });
+
                 binding.recyclerPokemonList.setAdapter(listAdapter);
             } else {
                 listAdapter.setData(response);

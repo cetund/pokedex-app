@@ -10,7 +10,8 @@
     <string name="weight">Peso</string>
     <string name="height">Altura</string>
     <string name="abilities">Habilidades</string>
-
+    <string name="description">Descripción</string>
+    <string name="weakness">Debilidades</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

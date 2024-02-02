@@ -11,7 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ctun.pokeapi.data.model.Abilities;
+import com.ctun.pokeapi.data.model.FlavorText;
+import com.ctun.pokeapi.data.model.FlavorTextEntries;
 import com.ctun.pokeapi.data.model.PokemonAbility;
+import com.ctun.pokeapi.data.model.PokemonDetail;
+import com.ctun.pokeapi.data.model.Results;
 import com.ctun.pokeapi.databinding.FragmentAboutBinding;
 import com.ctun.pokeapi.ui.detailpokemon.viewmodel.PokemonDetailViewModel;
 
@@ -22,7 +26,7 @@ public class AboutFragment extends Fragment {
     private FragmentAboutBinding binding;
     private PokemonDetailViewModel viewModel;
     private static final String ID_POKEMON = "ID_POKEMON";
-
+    private static final String POKEMON_DETAIL = "POKEMON_DETAIL";
     private int idPokemon = 0;
     public AboutFragment() {
         // Required empty public constructor
@@ -53,15 +57,16 @@ public class AboutFragment extends Fragment {
         binding = FragmentAboutBinding.inflate(inflater, container, false);
         // Inflate the layout for this fragment
 
-        viewModel.getPokemonDetail(idPokemon);
+
         viewModel.getDetail().observe(getActivity(), pokemonDetail -> {
-            binding.tvWeight.setText("" + pokemonDetail.getWeight());
-            binding.tvHeight.setText("" + pokemonDetail.getHeight());
+            binding.tvWeight.setText("" + (pokemonDetail.getWeight()/10f) + " kilogramos");
+            binding.tvHeight.setText("" + (pokemonDetail.getHeight()/10f) + " metros");
+
             String habilidades = "";
 
             for (int i = 0; i <pokemonDetail.getAbilities().size(); i++) {
                 PokemonAbility ability = pokemonDetail.getAbilities().get(i).getAbility();
-                habilidades = habilidades + ability.getName() + ", ";
+                habilidades = habilidades + ability.getName() + ",\n";
             }
             habilidades = habilidades.trim();
 
@@ -72,8 +77,40 @@ public class AboutFragment extends Fragment {
             binding.tvAbilities.setText(habilidades);
         });
 
+        viewModel.getPokemonSpecies().observe(getActivity(), flavorTextEntries -> {
+            Log.d("onResponse", "" + flavorTextEntries.getFlavorTextEntries().get(0).getDescription());
+            FlavorText descripcion = new FlavorText();
+
+            for(FlavorText entries : flavorTextEntries.getFlavorTextEntries()){
+                if(entries.getLanguage().getName().equals("es")){
+                    descripcion = entries;
+                }
+            }
+            binding.tvDescription.setText(descripcion.getDescription());
+        });
+
+        viewModel.getDamageRelations().observe(getActivity(), damageRelations -> {
+            String damageText = "";
+            Log.d("damageResults", "" + damageRelations.getDamageRelations().getDoubleDamageFrom().size());
+
+            for(Results results : damageRelations.getDamageRelations().getDoubleDamageFrom()){
+                damageText = damageText + results.getName() + ", ";
+            }
+
+            damageText = damageText.trim();
+
+            if (damageText != null && damageText.length() > 0 && damageText.charAt(damageText.length() - 1) == ',') {
+                damageText = damageText.substring(0, damageText.length() - 1);
+            }
+
+            binding.tvWeakness.setText(damageText);
+        });
+
+        viewModel.getIsRequestFailure().observe(getActivity(), aBoolean -> {
+        });
         return binding.getRoot();
     }
+
 
 
 }

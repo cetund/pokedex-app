@@ -2,9 +2,12 @@ package com.ctun.pokeapi.data;
 
 import android.util.Log;
 
+import com.ctun.pokeapi.data.model.DamageRelations;
+import com.ctun.pokeapi.data.model.FlavorTextEntries;
 import com.ctun.pokeapi.data.model.PokemonDetail;
 import com.ctun.pokeapi.data.model.PokemonList;
 import com.ctun.pokeapi.data.model.Results;
+import com.ctun.pokeapi.data.model.TypeDetail;
 import com.ctun.pokeapi.data.network.PokemonApiClient;
 import com.ctun.pokeapi.utils.ApiServiceCallback;
 
@@ -63,6 +66,44 @@ public class PokemonRepository {
 
             @Override
             public void onFailure(Call<PokemonDetail> call, Throwable t) {
+                callback.onFailure(t.getMessage());
+            }
+        });
+
+    }
+
+    public void getPokemonSpecies(ApiServiceCallback<FlavorTextEntries> callback, int id){
+        Call<FlavorTextEntries> flavorTextEntriesCall = apiClient.getPokemonSpecie(id);
+
+        flavorTextEntriesCall.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<FlavorTextEntries> call, Response<FlavorTextEntries> response) {
+
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<FlavorTextEntries> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
+                callback.onFailure(t.getMessage());
+            }
+        });
+
+    }
+
+    public void getPokemonDamageRelationship(ApiServiceCallback<TypeDetail> callback, int id){
+        Call<TypeDetail> damageRelationsCall = apiClient.getDamageRelations(id);
+
+        damageRelationsCall.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<TypeDetail> call, Response<TypeDetail> response) {
+                Log.d("doubledamage","" + response.body().getDamageRelations().getDoubleDamageFrom().size());
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<TypeDetail> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
                 callback.onFailure(t.getMessage());
             }
         });

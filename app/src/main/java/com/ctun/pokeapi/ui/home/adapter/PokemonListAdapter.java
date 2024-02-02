@@ -1,20 +1,26 @@
 package com.ctun.pokeapi.ui.home.adapter;
 
+import static android.nfc.NfcAdapter.EXTRA_ID;
 import static com.ctun.pokeapi.utils.Constants.POKEMON_IMAGES_URL_HD;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +34,8 @@ import com.ctun.pokeapi.R;
 import com.ctun.pokeapi.data.model.PokemonList;
 import com.ctun.pokeapi.data.model.Results;
 import com.ctun.pokeapi.databinding.PokemonListItemBinding;
+import com.ctun.pokeapi.ui.detailpokemon.view.PokemonDetailActivity;
+import com.ctun.pokeapi.ui.home.view.Home;
 
 import java.util.Locale;
 
@@ -53,11 +61,15 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Results item = mValues.getResultsList().get(holder.getAdapterPosition());
-        holder.mParent.setOnClickListener(view -> {
-            mOnClickPokemonLister.goDetail(holder.getAdapterPosition());
-        });
         holder.mPokemonName.setText(item.getName().toUpperCase(Locale.getDefault()));
+
         int positionAux = item.getId() == 0 ? (holder.getAdapterPosition() + 1) : item.getId();
+
+        holder.mParent.setOnClickListener(view -> {
+            Log.d("idPokemon", "" + positionAux);
+            mOnClickPokemonLister.goDetail(view, positionAux, holder.mImageViewCover);
+        });
+
         holder.mPokemonId.setText("#" + positionAux);
         Glide.with(mContext)
                 .load(POKEMON_IMAGES_URL_HD + (positionAux) + ".png")
@@ -130,7 +142,7 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
     }
 
     public interface OnClickPokemonLister{
-        void goDetail(int position);
+        void goDetail(View view, int position, View imageView);
     }
 
 }

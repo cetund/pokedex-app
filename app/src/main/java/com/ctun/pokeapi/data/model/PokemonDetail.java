@@ -1,5 +1,7 @@
 package com.ctun.pokeapi.data.model;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -18,6 +20,9 @@ public class PokemonDetail implements Serializable {
 
     @SerializedName("abilities")
     List<Abilities> abilities;
+
+    @SerializedName("name")
+    private String name;
 
     public List<Types> getTypes() {
         return types;
@@ -49,6 +54,14 @@ public class PokemonDetail implements Serializable {
 
     public void setAbilities(List<Abilities> abilities) {
         this.abilities = abilities;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
