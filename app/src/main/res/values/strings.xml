@@ -1,17 +1,25 @@
 <resources>
     <string name="app_name">PokeApi</string>
-    <string name="find_pokemon">Encuentra un Pokemon</string>
-    <string name="oops_no_internet">Hay problemas de conexión, \nintenta de nuevo</string>
-    <string name="empty_list">No se encontraron resultados</string>
-    <string name="stats">Estadisticas</string>
-    <string name="about">Acerca de</string>
-    <string name="evolution">Evolución</string>
+    <string name="find_pokemon">Search Pokemon</string>
+    <string name="oops_no_internet">No internet connection, \try again</string>
+    <string name="empty_list">Not found</string>
+    <string name="stats">Stats</string>
+    <string name="about">About</string>
+    <string name="evolution">Evolution</string>
+    <string name="type_example">Grass</string>
 
-    <string name="weight">Peso</string>
-    <string name="height">Altura</string>
-    <string name="abilities">Habilidades</string>
-    <string name="description">Descripción</string>
-    <string name="weakness">Debilidades</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="abilities">Abilities</string>
+    <string name="description">Description</string>
+    <string name="weakness">Weakness</string>
+    
+    <string name="hp">HP</string>
+    <string name="attack">ATTACK</string>
+    <string name="defense">DEFENSE</string>
+    <string name="special_attack">SPECIAL ATTACK</string>
+    <string name="special_defense">SPECIAL DEFENSE</string>
+    <string name="speed">SPEED</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

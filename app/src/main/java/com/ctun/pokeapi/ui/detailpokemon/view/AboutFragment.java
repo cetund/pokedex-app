@@ -4,20 +4,29 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ctun.pokeapi.data.model.Abilities;
 import com.ctun.pokeapi.data.model.FlavorText;
 import com.ctun.pokeapi.data.model.FlavorTextEntries;
 import com.ctun.pokeapi.data.model.PokemonAbility;
 import com.ctun.pokeapi.data.model.PokemonDetail;
+import com.ctun.pokeapi.data.model.PokemonType;
 import com.ctun.pokeapi.data.model.Results;
+import com.ctun.pokeapi.data.model.Types;
 import com.ctun.pokeapi.databinding.FragmentAboutBinding;
+import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTypeListAdapter;
 import com.ctun.pokeapi.ui.detailpokemon.viewmodel.PokemonDetailViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -28,6 +37,7 @@ public class AboutFragment extends Fragment {
     private static final String ID_POKEMON = "ID_POKEMON";
     private static final String POKEMON_DETAIL = "POKEMON_DETAIL";
     private int idPokemon = 0;
+
     public AboutFragment() {
         // Required empty public constructor
     }
@@ -49,6 +59,7 @@ public class AboutFragment extends Fragment {
         }
 
         viewModel = new ViewModelProvider(requireActivity()).get(PokemonDetailViewModel.class);
+
     }
 
     @Override
@@ -59,12 +70,12 @@ public class AboutFragment extends Fragment {
 
 
         viewModel.getDetail().observe(getActivity(), pokemonDetail -> {
-            binding.tvWeight.setText("" + (pokemonDetail.getWeight()/10f) + " kilogramos");
-            binding.tvHeight.setText("" + (pokemonDetail.getHeight()/10f) + " metros");
+            binding.tvWeight.setText("" + (pokemonDetail.getWeight() / 10f) + " kg");
+            binding.tvHeight.setText("" + (pokemonDetail.getHeight() / 10f) + " mts");
 
             String habilidades = "";
 
-            for (int i = 0; i <pokemonDetail.getAbilities().size(); i++) {
+            for (int i = 0; i < pokemonDetail.getAbilities().size(); i++) {
                 PokemonAbility ability = pokemonDetail.getAbilities().get(i).getAbility();
                 habilidades = habilidades + ability.getName() + ",\n";
             }
@@ -74,6 +85,7 @@ public class AboutFragment extends Fragment {
                 habilidades = habilidades.substring(0, habilidades.length() - 1);
             }
 
+
             binding.tvAbilities.setText(habilidades);
         });
 
@@ -81,8 +93,8 @@ public class AboutFragment extends Fragment {
             Log.d("onResponse", "" + flavorTextEntries.getFlavorTextEntries().get(0).getDescription());
             FlavorText descripcion = new FlavorText();
 
-            for(FlavorText entries : flavorTextEntries.getFlavorTextEntries()){
-                if(entries.getLanguage().getName().equals("es")){
+            for (FlavorText entries : flavorTextEntries.getFlavorTextEntries()) {
+                if (entries.getLanguage().getName().equals("en")) {
                     descripcion = entries;
                 }
             }
@@ -93,7 +105,7 @@ public class AboutFragment extends Fragment {
             String damageText = "";
             Log.d("damageResults", "" + damageRelations.getDamageRelations().getDoubleDamageFrom().size());
 
-            for(Results results : damageRelations.getDamageRelations().getDoubleDamageFrom()){
+            for (Results results : damageRelations.getDamageRelations().getDoubleDamageFrom()) {
                 damageText = damageText + results.getName() + ", ";
             }
 
@@ -103,14 +115,30 @@ public class AboutFragment extends Fragment {
                 damageText = damageText.substring(0, damageText.length() - 1);
             }
 
-            binding.tvWeakness.setText(damageText);
+            List<PokemonType> listTypes = new ArrayList<>();
+
+
+            for (int i = 0; i < damageRelations.getDamageRelations().getDoubleDamageFrom().size(); i++) {
+
+                Results results = damageRelations.getDamageRelations().getDoubleDamageFrom().get(i);
+                PokemonType pokemonType = new PokemonType();
+                pokemonType.setName(results.getName());
+                Types types = new Types();
+                types.setType(pokemonType);
+
+                PokemonType pokeType = types.getType();
+                listTypes.add(pokeType);
+            }
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+            binding.recyclerWeakness.setLayoutManager(linearLayoutManager);
+
+            PokemonTypeListAdapter adapter = new PokemonTypeListAdapter(getActivity(), listTypes);
+            binding.recyclerWeakness.setAdapter(adapter);
         });
 
         viewModel.getIsRequestFailure().observe(getActivity(), aBoolean -> {
         });
         return binding.getRoot();
     }
-
-
-
 }

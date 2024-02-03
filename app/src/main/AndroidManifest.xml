@@ -7,7 +7,6 @@
     <application
         android:name=".MyApp"
         android:allowBackup="true"
-
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -17,11 +16,22 @@
         android:theme="@style/Theme.PokeApi"
         tools:targetApi="31">
         <activity
+            android:name=".ui.splash.SplashActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".ui.detailpokemon.view.PokemonDetailActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ui.home.view.Home"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

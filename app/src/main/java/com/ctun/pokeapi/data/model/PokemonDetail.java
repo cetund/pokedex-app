@@ -21,6 +21,9 @@ public class PokemonDetail implements Serializable {
     @SerializedName("abilities")
     List<Abilities> abilities;
 
+    @SerializedName("stats")
+    List<Stats> stats;
+
     @SerializedName("name")
     private String name;
 
@@ -62,6 +65,14 @@ public class PokemonDetail implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Stats> getStats() {
+        return stats;
+    }
+
+    public void setStats(List<Stats> stats) {
+        this.stats = stats;
     }
 
     @Override

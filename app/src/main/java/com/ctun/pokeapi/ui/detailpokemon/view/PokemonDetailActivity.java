@@ -12,6 +12,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,12 +33,17 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ctun.pokeapi.R;
 import com.ctun.pokeapi.data.model.PokemonAbility;
+import com.ctun.pokeapi.data.model.PokemonType;
+import com.ctun.pokeapi.data.model.Types;
 import com.ctun.pokeapi.databinding.ActivityPokemonDetailBinding;
 import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTabsDetailAdapter;
+import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTypeListAdapter;
 import com.ctun.pokeapi.ui.detailpokemon.viewmodel.PokemonDetailViewModel;
 import com.ctun.pokeapi.ui.home.viewmodel.HomeViewModel;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -123,6 +131,20 @@ public class PokemonDetailActivity extends AppCompatActivity {
         viewModel.getDetail().observe(this, pokemonDetail -> {
             binding.tvPokemonName.setText(pokemonDetail.getName().toUpperCase(Locale.getDefault()));
             //viewModel.getPokemonDamageRelation(pokemonDetail.getTypes().get(0).getType().);
+            List<PokemonType> listTypes = new ArrayList<>();
+
+
+            for (int i = 0; i < pokemonDetail.getTypes().size(); i++) {
+                Types types = pokemonDetail.getTypes().get(i);
+                PokemonType pokeType = types.getType();
+                listTypes.add(pokeType);
+            }
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+            binding.recyclerType.setLayoutManager(linearLayoutManager);
+
+            PokemonTypeListAdapter adapter = new PokemonTypeListAdapter(this, listTypes);
+            binding.recyclerType.setAdapter(adapter);
 
             String path = pokemonDetail.getTypes().get(0).getType().getUrl();
             // Split path into segments
@@ -144,17 +166,17 @@ public class PokemonDetailActivity extends AppCompatActivity {
         AboutFragment aboutFragment = AboutFragment.newInstance(idPokemon);
         EvolutionFragment evolutionFragment = EvolutionFragment.newInstance();
 
-        sa.addFragment(statsFragment);
         sa.addFragment(aboutFragment);
+        sa.addFragment(statsFragment);
         sa.addFragment(evolutionFragment);
         binding.pager.setAdapter(sa);
 
         new TabLayoutMediator(binding.tabLayout, binding.pager,
                 (tab, position) -> {
                     if (position == 0) {
-                        tab.setText(R.string.stats);
-                    } else if (position == 1) {
                         tab.setText(R.string.about);
+                    } else if (position == 1) {
+                        tab.setText(R.string.stats);
                     } else if (position == 2) {
                         tab.setText(R.string.evolution);
                     }

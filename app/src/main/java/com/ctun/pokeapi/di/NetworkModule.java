@@ -44,4 +44,5 @@ public class NetworkModule {
     public PokemonApiClient provideApiClient(Retrofit retrofit){
         return retrofit.create(PokemonApiClient.class);
     }
+
 }
