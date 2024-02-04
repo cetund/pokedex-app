@@ -2,6 +2,7 @@ package com.ctun.pokeapi.ui.detail.view;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,10 +37,22 @@ public class EvolutionFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(PokemonDetailViewModel.class);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEvolutionBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(PokemonDetailViewModel.class);
+
+        setObservers();
+
+        return binding.getRoot();
+    }
+
+    private void setObservers(){
 
         viewModel.getPokemonSpecies().observe(getActivity(), species -> {
             Log.d("evolution", species.getEvolutionChain().getUrl());
@@ -53,16 +66,16 @@ public class EvolutionFragment extends Fragment {
         });
 
         viewModel.getEvolutionChain().observe(getActivity(), evolutionChain -> {
-           Log.d("evolutionChain", evolutionChain.getChain().getSpecies().getName());
+            Log.d("evolutionChain", evolutionChain.getChain().getSpecies().getName());
             List<EvolvesTo> chain1 = evolutionChain.getChain().getEvolvesTo();
-           String base = evolutionChain.getChain().getSpecies().getName();
-           String pathEvolutionBase = evolutionChain.getChain().getSpecies().getUrl();
-           String evolution1;
-           String pathEvolution1;
-           String evolution2;
-           String pathEvolution2;
-           int level1 = 0;
-           int level2 = 0;
+            String base = evolutionChain.getChain().getSpecies().getName();
+            String pathEvolutionBase = evolutionChain.getChain().getSpecies().getUrl();
+            String evolution1;
+            String pathEvolution1;
+            String evolution2;
+            String pathEvolution2;
+            int level1 = 0;
+            int level2 = 0;
 
             int idEvolutionBase = GetIdFromUrl.getId(pathEvolutionBase);
             int idEvolution1 = 0;
@@ -72,31 +85,28 @@ public class EvolutionFragment extends Fragment {
             evolutionList.add(new Evolution(idEvolutionBase, base, 1));
 
             if(!chain1.isEmpty()){
-               evolution1 = chain1.get(0).getSpecies().getName();
-               pathEvolution1 = chain1.get(0).getSpecies().getUrl();
-               idEvolution1 = GetIdFromUrl.getId(pathEvolution1);
-               level1 = chain1.get(0).getEvolutionDetails().get(0).getMinLevel();
+                evolution1 = chain1.get(0).getSpecies().getName();
+                pathEvolution1 = chain1.get(0).getSpecies().getUrl();
+                idEvolution1 = GetIdFromUrl.getId(pathEvolution1);
+                level1 = chain1.get(0).getEvolutionDetails().get(0).getMinLevel();
 
-               evolutionList.add(new Evolution(idEvolution1, evolution1, level1));
+                evolutionList.add(new Evolution(idEvolution1, evolution1, level1));
 
-               Log.d("evolutionChain", evolution1);
-               if(!chain1.get(0).getEvolvesTo().isEmpty()){
-                   evolution2 = chain1.get(0).getEvolvesTo().get(0).getSpecies().getName();
-                   pathEvolution2 = chain1.get(0).getEvolvesTo().get(0).getSpecies().getUrl();
-                   idEvolution2 = GetIdFromUrl.getId(pathEvolution2);
-                   level2 = chain1.get(0).getEvolvesTo().get(0).getEvolutionDetails().get(0).getMinLevel();
-                   evolutionList.add(new Evolution(idEvolution2, evolution2, level2));
-                   Log.d("evolutionChain", evolution2);
-               }
-           }
+                Log.d("evolutionChain", evolution1);
+                if(!chain1.get(0).getEvolvesTo().isEmpty()){
+                    evolution2 = chain1.get(0).getEvolvesTo().get(0).getSpecies().getName();
+                    pathEvolution2 = chain1.get(0).getEvolvesTo().get(0).getSpecies().getUrl();
+                    idEvolution2 = GetIdFromUrl.getId(pathEvolution2);
+                    level2 = chain1.get(0).getEvolvesTo().get(0).getEvolutionDetails().get(0).getMinLevel();
+                    evolutionList.add(new Evolution(idEvolution2, evolution2, level2));
+                    Log.d("evolutionChain", evolution2);
+                }
+            }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             PokemonEvolutionListAdapter adapter = new PokemonEvolutionListAdapter(getActivity(), evolutionList);
             binding.recyclerEvolution.setLayoutManager(linearLayoutManager);
             binding.recyclerEvolution.setAdapter(adapter);
         });
-
-        // Inflate the layout for this fragment
-        return binding.getRoot();
     }
 }

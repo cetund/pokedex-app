@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PokeApi</string>
+    <string name="app_name">PokeDex</string>
     <string name="find_pokemon">Search Pokemon</string>
     <string name="oops_no_internet">No internet connection, try again</string>
     <string name="empty_list">Not found</string>

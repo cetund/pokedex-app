@@ -54,11 +54,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PokemonDetailActivity extends AppCompatActivity {
     private ActivityPokemonDetailBinding binding;
-
     private PokemonDetailViewModel viewModel;
-
     private int idPokemon = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +73,6 @@ public class PokemonDetailActivity extends AppCompatActivity {
 
         binding.toolbar.getNavigationIcon().setTint(ContextCompat.getColor(this, R.color.white));
 
-
         supportPostponeEnterTransition();
 
         OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
@@ -91,8 +87,16 @@ public class PokemonDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         idPokemon = bundle.getInt(EXTRA_ID);
 
-        LoadingDialog loadingdialog = new LoadingDialog(PokemonDetailActivity.this);
+        setListeners();
 
+        setObservers();
+
+        refreshDetail();
+
+
+    }
+
+    private void setListeners(){
         initViewPager();
 
         Glide.with(this)
@@ -130,8 +134,10 @@ public class PokemonDetailActivity extends AppCompatActivity {
                 })
                 .into(binding.imgPokemon);
 
-        refreshHome();
+        binding.refreshDetail.setOnRefreshListener(() -> refreshDetail());
+    }
 
+    private void setObservers(){
         viewModel.getDetail().observe(this, pokemonDetail -> {
             binding.tvPokemonName.setText(pokemonDetail.getName().toUpperCase(Locale.getDefault()));
             //viewModel.getPokemonDamageRelation(pokemonDetail.getTypes().get(0).getType().);
@@ -166,17 +172,11 @@ public class PokemonDetailActivity extends AppCompatActivity {
 
             //binding.progressBarDetail.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
         });
+
         viewModel.getIsRequestFailure().observe(this, aBoolean -> {
             binding.pager.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
             binding.lytNoInternet.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
         });
-        binding.refreshDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshHome();
-            }
-        });
-
     }
 
     private void initViewPager() {
@@ -208,6 +208,11 @@ public class PokemonDetailActivity extends AppCompatActivity {
 
     }
 
+    private void refreshDetail(){
+        viewModel.getPokemonDetail(idPokemon);
+        viewModel.getPokemonSpecies(idPokemon);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -215,10 +220,5 @@ public class PokemonDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void refreshHome(){
-        viewModel.getPokemonDetail(idPokemon);
-        viewModel.getPokemonSpecies(idPokemon);
     }
 }

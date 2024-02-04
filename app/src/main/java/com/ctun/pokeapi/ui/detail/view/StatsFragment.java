@@ -33,10 +33,6 @@ import java.util.List;
 
 public class StatsFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
     private FragmentStatsBinding binding;
 
     private PokemonDetailViewModel viewModel;
@@ -49,21 +45,12 @@ public class StatsFragment extends Fragment {
 
     public static StatsFragment newInstance() {
         StatsFragment fragment = new StatsFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
         viewModel = new ViewModelProvider(requireActivity()).get(PokemonDetailViewModel.class);
     }
 
@@ -71,24 +58,35 @@ public class StatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentStatsBinding.inflate(getLayoutInflater(), container, false );
-        // Inflate the layout for this fragment
+        setObservers();
+        setListeners();
+        return binding.getRoot();
+    }
 
+    private void setListeners(){
+        binding.switchRadar.setOnCheckedChangeListener((compoundButton, b) -> {
+            binding.lytBars.setVisibility(b ? View.GONE: View.VISIBLE);
+            binding.radarChart.setVisibility(b ? View.VISIBLE:View.GONE);
+        });
+    }
+
+    private void setObservers(){
         viewModel.getDetail().observe(requireActivity(), pokemonDetail -> {
-           int statHp =  pokemonDetail.getStats().get(0).getBaseStat();
-           int statAttack = pokemonDetail.getStats().get(1).getBaseStat();
-           int statDefense = pokemonDetail.getStats().get(2).getBaseStat();
-           int statSpecialAttack = pokemonDetail.getStats().get(3).getBaseStat();
-           int statSpecialDefense = pokemonDetail.getStats().get(4).getBaseStat();
-           int statSpeed = pokemonDetail.getStats().get(5).getBaseStat();
+            int statHp =  pokemonDetail.getStats().get(0).getBaseStat();
+            int statAttack = pokemonDetail.getStats().get(1).getBaseStat();
+            int statDefense = pokemonDetail.getStats().get(2).getBaseStat();
+            int statSpecialAttack = pokemonDetail.getStats().get(3).getBaseStat();
+            int statSpecialDefense = pokemonDetail.getStats().get(4).getBaseStat();
+            int statSpeed = pokemonDetail.getStats().get(5).getBaseStat();
 
-           binding.tvHP.setText("HP");
-           binding.progressHP.setProgress(statHp);
+            binding.tvHP.setText("HP");
+            binding.progressHP.setProgress(statHp);
             binding.progressHP.setProgressTintList(ColorStateList.valueOf(getColorProgress(statHp)));
             binding.tvProgressHp.setText(String.valueOf(statHp));
 
-           binding.tvAttack.setText("ATTACK");
-           binding.progressAttack.setProgress(statAttack);
-           binding.progressAttack.setProgressTintList(ColorStateList.valueOf(getColorProgress(statAttack)));
+            binding.tvAttack.setText("ATTACK");
+            binding.progressAttack.setProgress(statAttack);
+            binding.progressAttack.setProgressTintList(ColorStateList.valueOf(getColorProgress(statAttack)));
             binding.tvProgressAttack.setText(String.valueOf(statAttack));
 
             binding.tvDefense.setText("DEFENSE");
@@ -120,12 +118,6 @@ public class StatsFragment extends Fragment {
             dataValues.add(new RadarEntry(statSpeed));
             initChart(dataValues);
         });
-
-        binding.switchRadar.setOnCheckedChangeListener((compoundButton, b) -> {
-            binding.lytBars.setVisibility(b ? View.GONE: View.VISIBLE);
-            binding.radarChart.setVisibility(b ? View.VISIBLE:View.GONE);
-        });
-        return binding.getRoot();
     }
 
     private void initChart(List<RadarEntry> dataValues){

@@ -9,5 +9,15 @@
         <item name="fontFamily">@font/rubik</item>
     </style>
 
+    <style name="Base.Theme.Splash" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/md_red_400</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="fontFamily">@font/rubik</item>
+    </style>
+
     <style name="Theme.PokeApi" parent="Base.Theme.PokeApi" />
+    <style name="Theme.PokeApi.Splash" parent="Base.Theme.Splash"/>
 </resources>

@@ -29,7 +29,6 @@ public class AboutFragment extends Fragment {
     private FragmentAboutBinding binding;
     private PokemonDetailViewModel viewModel;
     private static final String ID_POKEMON = "ID_POKEMON";
-    private static final String POKEMON_DETAIL = "POKEMON_DETAIL";
     private int idPokemon = 0;
 
     public AboutFragment() {
@@ -38,7 +37,6 @@ public class AboutFragment extends Fragment {
 
     public static AboutFragment newInstance(int idPokemon) {
         AboutFragment fragment = new AboutFragment();
-
         Bundle args = new Bundle();
         args.putInt(ID_POKEMON, idPokemon);
         fragment.setArguments(args);
@@ -51,18 +49,18 @@ public class AboutFragment extends Fragment {
         if (getArguments() != null) {
             idPokemon = getArguments().getInt(ID_POKEMON);
         }
-
         viewModel = new ViewModelProvider(requireActivity()).get(PokemonDetailViewModel.class);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAboutBinding.inflate(inflater, container, false);
-        // Inflate the layout for this fragment
+        setObservers();
+        return binding.getRoot();
+    }
 
-
+    private void setObservers(){
         viewModel.getDetail().observe(getActivity(), pokemonDetail -> {
             binding.tvWeight.setText("" + (pokemonDetail.getWeight() / 10f) + " kg");
             binding.tvHeight.setText("" + (pokemonDetail.getHeight() / 10f) + " mts");
@@ -133,6 +131,5 @@ public class AboutFragment extends Fragment {
 
         viewModel.getIsRequestFailure().observe(getActivity(), aBoolean -> {
         });
-        return binding.getRoot();
     }
 }

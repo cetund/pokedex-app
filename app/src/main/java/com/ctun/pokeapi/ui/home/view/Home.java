@@ -45,9 +45,9 @@ public class Home extends AppCompatActivity {
         OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(isSearch){
+                if (isSearch) {
                     refreshHome();
-                }else{
+                } else {
                     finish();
                 }
             }
@@ -55,14 +55,21 @@ public class Home extends AppCompatActivity {
 
         getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
 
+        setListeners();
+        setObservers();
+
+        viewModel.onCreate();
+
+    }
+
+    private void setListeners() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
         binding.recyclerPokemonList.setLayoutManager(gridLayoutManager);
-
         binding.recyclerPokemonList.addOnScrollListener(new PaginationScrollListener(gridLayoutManager) {
             @Override
             protected void loadMoreItems() {
-                if(listAdapter!=null){
+                if (listAdapter != null) {
                     isLoading = true;
                     currentPage = (listAdapter.getItemCount());
                     viewModel.nextPage(currentPage);
@@ -85,8 +92,22 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        binding.refreshHome.setOnRefreshListener(() -> {
+            refreshHome();
+        });
 
-        viewModel.onCreate();
+        binding.inputSearch.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                if (!binding.inputSearch.getText().toString().trim().isEmpty()) {
+                    clearList();
+                    viewModel.searchPokemon(binding.inputSearch.getText().toString().trim().toLowerCase(Locale.getDefault()));
+                }
+            }
+            return false;
+        });
+    }
+
+    private void setObservers() {
         viewModel.getPokemonListData().observe(this, response -> {
             if (listAdapter == null) {
                 listAdapter = new PokemonListAdapter(this, response, (view, position, imageView) -> {
@@ -97,7 +118,7 @@ public class Home extends AppCompatActivity {
                             "imageMain");
 
                     Intent detail = new Intent(Home.this, PokemonDetailActivity.class);
-                    detail.putExtra(EXTRA_ID,  (position));
+                    detail.putExtra(EXTRA_ID, (position));
                     startActivity(detail, activityOptionsCompat.toBundle());
                 });
 
@@ -105,11 +126,11 @@ public class Home extends AppCompatActivity {
             } else {
                 listAdapter.setData(response);
             }
-            
-            if(response.getResultsList()==null){
+
+            if (response.getResultsList() == null) {
                 binding.lytEmptyList.setVisibility(View.VISIBLE);
                 binding.lytNoInternet.setVisibility(View.GONE);
-            }else{
+            } else {
                 binding.lytEmptyList.setVisibility(View.GONE);
             }
 
@@ -126,13 +147,9 @@ public class Home extends AppCompatActivity {
             binding.lytNoInternet.setVisibility(isRequestFailure ? View.VISIBLE : View.GONE);
             binding.recyclerPokemonList.setVisibility(isRequestFailure ? View.GONE : View.VISIBLE);
 
-            if( isRequestFailure && binding.lytEmptyList.getVisibility() == View.VISIBLE){
+            if (isRequestFailure && binding.lytEmptyList.getVisibility() == View.VISIBLE) {
                 binding.lytEmptyList.setVisibility(View.GONE);
             }
-        });
-
-        binding.refreshHome.setOnRefreshListener(() -> {
-            refreshHome();
         });
 
         viewModel.getIsRefreshing().observe(this, isRefreshing -> {
@@ -143,32 +160,23 @@ public class Home extends AppCompatActivity {
             isLoading = isLoadingNextPage;
             binding.progressBarNextPage.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
+
         viewModel.getIsLastPage().observe(this, isLast -> {
             isLastPage = isLast;
-        });
-
-        binding.inputSearch.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                if(!binding.inputSearch.getText().toString().trim().isEmpty()){
-                    clearList();
-                    viewModel.searchPokemon(binding.inputSearch.getText().toString().trim().toLowerCase(Locale.getDefault()));
-                }
-            }
-            return false;
         });
 
         viewModel.getIsSearch().observe(this, searched -> {
             isSearch = searched;
         });
-        }
-
-        private void clearList(){
-            listAdapter = null;
-            currentPage = 0;
-        }
-
-        private void refreshHome(){
-            clearList();
-            viewModel.refreshList();
-        }
     }
+
+    private void clearList() {
+        listAdapter = null;
+        currentPage = 0;
+    }
+
+    private void refreshHome() {
+        clearList();
+        viewModel.refreshList();
+    }
+}
