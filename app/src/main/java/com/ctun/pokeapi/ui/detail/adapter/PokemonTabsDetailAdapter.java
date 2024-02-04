@@ -1,4 +1,4 @@
-package com.ctun.pokeapi.ui.detailpokemon.adapter;
+package com.ctun.pokeapi.ui.detail.adapter;
 
 import android.content.Context;
 

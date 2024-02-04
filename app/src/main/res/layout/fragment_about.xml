@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.detailpokemon.view.AboutFragment">
+    tools:context=".ui.detail.view.AboutFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.detailpokemon.view.AboutFragment">
+        tools:context=".ui.detail.view.AboutFragment">
 
         <TextView
             android:id="@+id/textView7"
@@ -94,11 +94,13 @@
 
         <TextView
             android:id="@+id/tvAbilities"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/tvWeight"
-            app:layout_constraintTop_toTopOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
             tools:text="habilidad 1, \nhabilidad 2, \nhabilidad 3" />
 
         <TextView
@@ -118,12 +120,13 @@
             android:id="@+id/recyclerWeakness"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:layout_constraintVertical_bias="0.060000002"
             tools:itemCount="1"
             tools:listitem="@layout/type_list_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>

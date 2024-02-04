@@ -2,6 +2,7 @@ package com.ctun.pokeapi.ui.home.view;
 
 import static android.nfc.NfcAdapter.EXTRA_ID;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,13 +10,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.ctun.pokeapi.databinding.ActivityHomeBinding;
 import com.ctun.pokeapi.ui.home.adapter.PokemonListAdapter;
-import com.ctun.pokeapi.ui.detailpokemon.view.PokemonDetailActivity;
+import com.ctun.pokeapi.ui.detail.view.PokemonDetailActivity;
 import com.ctun.pokeapi.ui.home.viewmodel.HomeViewModel;
 import com.ctun.pokeapi.utils.MultiClickPreventer;
 import com.ctun.pokeapi.utils.PaginationScrollListener;
@@ -42,6 +42,19 @@ public class Home extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(isSearch){
+                    refreshHome();
+                }else{
+                    finish();
+                }
+            }
+        };
+
+        getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
         binding.recyclerPokemonList.setLayoutManager(gridLayoutManager);
@@ -119,8 +132,7 @@ public class Home extends AppCompatActivity {
         });
 
         binding.refreshHome.setOnRefreshListener(() -> {
-            clearList();
-            viewModel.refreshList();
+            refreshHome();
         });
 
         viewModel.getIsRefreshing().observe(this, isRefreshing -> {
@@ -153,5 +165,10 @@ public class Home extends AppCompatActivity {
         private void clearList(){
             listAdapter = null;
             currentPage = 0;
+        }
+
+        private void refreshHome(){
+            clearList();
+            viewModel.refreshList();
         }
     }

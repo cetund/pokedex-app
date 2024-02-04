@@ -2,8 +2,8 @@ package com.ctun.pokeapi.data;
 
 import android.util.Log;
 
-import com.ctun.pokeapi.data.model.DamageRelations;
-import com.ctun.pokeapi.data.model.FlavorTextEntries;
+import com.ctun.pokeapi.data.model.EvolutionChain;
+import com.ctun.pokeapi.data.model.Species;
 import com.ctun.pokeapi.data.model.PokemonDetail;
 import com.ctun.pokeapi.data.model.PokemonList;
 import com.ctun.pokeapi.data.model.Results;
@@ -72,18 +72,18 @@ public class PokemonRepository {
 
     }
 
-    public void getPokemonSpecies(ApiServiceCallback<FlavorTextEntries> callback, int id){
-        Call<FlavorTextEntries> flavorTextEntriesCall = apiClient.getPokemonSpecie(id);
+    public void getPokemonSpecies(ApiServiceCallback<Species> callback, int id){
+        Call<Species> flavorTextEntriesCall = apiClient.getPokemonSpecie(id);
 
         flavorTextEntriesCall.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<FlavorTextEntries> call, Response<FlavorTextEntries> response) {
+            public void onResponse(Call<Species> call, Response<Species> response) {
 
                 callback.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<FlavorTextEntries> call, Throwable t) {
+            public void onFailure(Call<Species> call, Throwable t) {
                 Log.e("onFailure", t.getMessage());
                 callback.onFailure(t.getMessage());
             }
@@ -108,5 +108,21 @@ public class PokemonRepository {
             }
         });
 
+    }
+
+    public void getPokemonEvolutionChain(ApiServiceCallback<EvolutionChain> callback, int id){
+        Call<EvolutionChain> evolutionChainCall = apiClient.getEvolutionChain(id);
+        evolutionChainCall.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<EvolutionChain> call, Response<EvolutionChain> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<EvolutionChain> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
+                callback.onFailure(t.getMessage());
+            }
+        });
     }
 }

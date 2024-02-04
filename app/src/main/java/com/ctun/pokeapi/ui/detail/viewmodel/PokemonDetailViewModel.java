@@ -1,13 +1,12 @@
-package com.ctun.pokeapi.ui.detailpokemon.viewmodel;
+package com.ctun.pokeapi.ui.detail.viewmodel;
 
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.ctun.pokeapi.data.PokemonRepository;
-import com.ctun.pokeapi.data.model.DamageRelations;
-import com.ctun.pokeapi.data.model.FlavorTextEntries;
+import com.ctun.pokeapi.data.model.EvolutionChain;
+import com.ctun.pokeapi.data.model.Species;
 import com.ctun.pokeapi.data.model.PokemonDetail;
 import com.ctun.pokeapi.data.model.TypeDetail;
 import com.ctun.pokeapi.domain.GetPokemonDetailUseCase;
@@ -26,9 +25,11 @@ public class PokemonDetailViewModel extends ViewModel {
     private MutableLiveData<Boolean> isLoading;
     private MutableLiveData<Boolean> isRequestFailure;
 
-    private MutableLiveData<FlavorTextEntries> pokemonSpecies;
+    private MutableLiveData<Species> pokemonSpecies;
 
     private MutableLiveData<TypeDetail> damageRelations;
+
+    private MutableLiveData<EvolutionChain> evolutionChain;
 
     @Inject
     public PokemonDetailViewModel() {
@@ -38,6 +39,7 @@ public class PokemonDetailViewModel extends ViewModel {
         isRequestFailure = new MutableLiveData<>();
         pokemonSpecies = new MutableLiveData<>();
         damageRelations = new MutableLiveData<>();
+        evolutionChain = new MutableLiveData<>();
     }
 
     public void getPokemonDetail(int id) {
@@ -69,11 +71,11 @@ public class PokemonDetailViewModel extends ViewModel {
         isLoading.postValue(true);
         getPokemonDetailUseCase.getPokemonSpecies(new ApiServiceCallback<>() {
             @Override
-            public void onSuccess(FlavorTextEntries flavorTextEntries) {
+            public void onSuccess(Species species) {
                 isLoading.postValue(false);
 
-                if (flavorTextEntries != null) {
-                    pokemonSpecies.postValue(flavorTextEntries);
+                if (species != null) {
+                    pokemonSpecies.postValue(species);
                 } else {
                     isRequestFailure.postValue(true);
                 }
@@ -109,6 +111,29 @@ public class PokemonDetailViewModel extends ViewModel {
         }, id);
     }
 
+    public void getPokemonEvolution(int id) {
+        isRequestFailure.postValue(false);
+        isLoading.postValue(true);
+        getPokemonDetailUseCase.getPokemonEvolutionChain(new ApiServiceCallback<>() {
+            @Override
+            public void onSuccess(EvolutionChain response) {
+                isLoading.postValue(false);
+
+                if (response != null) {
+                    evolutionChain.postValue(response);
+                } else {
+                    isRequestFailure.postValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                isRequestFailure.postValue(true);
+                isLoading.postValue(false);
+            }
+        }, id);
+    }
+
 
     public MutableLiveData<PokemonDetail> getDetail(){
         return detail;
@@ -118,7 +143,7 @@ public class PokemonDetailViewModel extends ViewModel {
         return isLoading;
     }
 
-    public MutableLiveData<FlavorTextEntries> getPokemonSpecies (){
+    public MutableLiveData<Species> getPokemonSpecies (){
         return pokemonSpecies;
     }
 
@@ -127,5 +152,9 @@ public class PokemonDetailViewModel extends ViewModel {
     }
     public MutableLiveData<TypeDetail> getDamageRelations(){
         return damageRelations;
+    }
+
+    public MutableLiveData<EvolutionChain> getEvolutionChain(){
+        return evolutionChain;
     }
 }

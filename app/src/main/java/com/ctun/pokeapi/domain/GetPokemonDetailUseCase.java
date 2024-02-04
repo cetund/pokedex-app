@@ -1,10 +1,8 @@
 package com.ctun.pokeapi.domain;
 
-import android.util.Log;
-
 import com.ctun.pokeapi.data.PokemonRepository;
-import com.ctun.pokeapi.data.model.DamageRelations;
-import com.ctun.pokeapi.data.model.FlavorTextEntries;
+import com.ctun.pokeapi.data.model.EvolutionChain;
+import com.ctun.pokeapi.data.model.Species;
 import com.ctun.pokeapi.data.model.PokemonDetail;
 import com.ctun.pokeapi.data.model.TypeDetail;
 import com.ctun.pokeapi.utils.ApiServiceCallback;
@@ -32,12 +30,12 @@ public class GetPokemonDetailUseCase {
         }, id);
     }
 
-    public void getPokemonSpecies(ApiServiceCallback<FlavorTextEntries> callback, int id){
+    public void getPokemonSpecies(ApiServiceCallback<Species> callback, int id){
         repository.getPokemonSpecies(new ApiServiceCallback<>() {
             @Override
-            public void onSuccess(FlavorTextEntries flavorTextEntries) {
+            public void onSuccess(Species species) {
 
-                callback.onSuccess(flavorTextEntries);
+                callback.onSuccess(species);
             }
 
             @Override
@@ -52,6 +50,20 @@ public class GetPokemonDetailUseCase {
             @Override
             public void onSuccess(TypeDetail damageRelations) {
                 callback.onSuccess(damageRelations);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                callback.onFailure(error);
+            }
+        }, id);
+    }
+
+    public void getPokemonEvolutionChain(ApiServiceCallback<EvolutionChain> callback, int id){
+        repository.getPokemonEvolutionChain(new ApiServiceCallback<EvolutionChain>() {
+            @Override
+            public void onSuccess(EvolutionChain evolutionChain) {
+                callback.onSuccess(evolutionChain);
             }
 
             @Override

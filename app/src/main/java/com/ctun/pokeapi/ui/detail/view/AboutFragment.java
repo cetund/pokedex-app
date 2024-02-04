@@ -1,4 +1,4 @@
-package com.ctun.pokeapi.ui.detailpokemon.view;
+package com.ctun.pokeapi.ui.detail.view;
 
 import android.os.Bundle;
 
@@ -11,24 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.ctun.pokeapi.data.model.Abilities;
 import com.ctun.pokeapi.data.model.FlavorText;
-import com.ctun.pokeapi.data.model.FlavorTextEntries;
 import com.ctun.pokeapi.data.model.PokemonAbility;
-import com.ctun.pokeapi.data.model.PokemonDetail;
 import com.ctun.pokeapi.data.model.PokemonType;
 import com.ctun.pokeapi.data.model.Results;
 import com.ctun.pokeapi.data.model.Types;
 import com.ctun.pokeapi.databinding.FragmentAboutBinding;
-import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTypeListAdapter;
-import com.ctun.pokeapi.ui.detailpokemon.viewmodel.PokemonDetailViewModel;
+import com.ctun.pokeapi.ui.detail.adapter.PokemonTypeListAdapter;
+import com.ctun.pokeapi.ui.detail.viewmodel.PokemonDetailViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 public class AboutFragment extends Fragment {
 
@@ -77,7 +71,7 @@ public class AboutFragment extends Fragment {
 
             for (int i = 0; i < pokemonDetail.getAbilities().size(); i++) {
                 PokemonAbility ability = pokemonDetail.getAbilities().get(i).getAbility();
-                habilidades = habilidades + ability.getName() + ",\n";
+                habilidades = habilidades + ability.getName() + ", ";
             }
             habilidades = habilidades.trim();
 

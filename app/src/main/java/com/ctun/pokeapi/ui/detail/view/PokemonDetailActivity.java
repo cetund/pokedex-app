@@ -1,4 +1,4 @@
-package com.ctun.pokeapi.ui.detailpokemon.view;
+package com.ctun.pokeapi.ui.detail.view;
 
 import static android.nfc.NfcAdapter.EXTRA_ID;
 
@@ -10,19 +10,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -32,14 +33,16 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ctun.pokeapi.R;
-import com.ctun.pokeapi.data.model.PokemonAbility;
 import com.ctun.pokeapi.data.model.PokemonType;
+import com.ctun.pokeapi.data.model.Species;
 import com.ctun.pokeapi.data.model.Types;
 import com.ctun.pokeapi.databinding.ActivityPokemonDetailBinding;
-import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTabsDetailAdapter;
-import com.ctun.pokeapi.ui.detailpokemon.adapter.PokemonTypeListAdapter;
-import com.ctun.pokeapi.ui.detailpokemon.viewmodel.PokemonDetailViewModel;
-import com.ctun.pokeapi.ui.home.viewmodel.HomeViewModel;
+import com.ctun.pokeapi.ui.detail.adapter.PokemonTabsDetailAdapter;
+import com.ctun.pokeapi.ui.detail.adapter.PokemonTypeListAdapter;
+import com.ctun.pokeapi.ui.detail.viewmodel.PokemonDetailViewModel;
+import com.ctun.pokeapi.utils.LoadingDialog;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
@@ -88,6 +91,8 @@ public class PokemonDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         idPokemon = bundle.getInt(EXTRA_ID);
 
+        LoadingDialog loadingdialog = new LoadingDialog(PokemonDetailActivity.this);
+
         initViewPager();
 
         Glide.with(this)
@@ -125,8 +130,7 @@ public class PokemonDetailActivity extends AppCompatActivity {
                 })
                 .into(binding.imgPokemon);
 
-        viewModel.getPokemonDetail(idPokemon);
-        viewModel.getPokemonSpecies(idPokemon);
+        refreshHome();
 
         viewModel.getDetail().observe(this, pokemonDetail -> {
             binding.tvPokemonName.setText(pokemonDetail.getName().toUpperCase(Locale.getDefault()));
@@ -157,6 +161,22 @@ public class PokemonDetailActivity extends AppCompatActivity {
             viewModel.getPokemonDamageRelation(document);
         });
 
+        viewModel.getIsLoading().observe(this, aBoolean -> {
+            binding.refreshDetail.setRefreshing(aBoolean);
+
+            //binding.progressBarDetail.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        });
+        viewModel.getIsRequestFailure().observe(this, aBoolean -> {
+            binding.pager.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+            binding.lytNoInternet.setVisibility(aBoolean ? View.VISIBLE : View.GONE);
+        });
+        binding.refreshDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshHome();
+            }
+        });
+
     }
 
     private void initViewPager() {
@@ -169,6 +189,7 @@ public class PokemonDetailActivity extends AppCompatActivity {
         sa.addFragment(aboutFragment);
         sa.addFragment(statsFragment);
         sa.addFragment(evolutionFragment);
+        binding.pager.setUserInputEnabled(false);
         binding.pager.setAdapter(sa);
 
         new TabLayoutMediator(binding.tabLayout, binding.pager,
@@ -194,5 +215,10 @@ public class PokemonDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshHome(){
+        viewModel.getPokemonDetail(idPokemon);
+        viewModel.getPokemonSpecies(idPokemon);
     }
 }

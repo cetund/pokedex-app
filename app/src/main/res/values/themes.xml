@@ -6,6 +6,7 @@
         <item name="android:statusBarColor">@color/background_home</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="fontFamily">@font/rubik</item>
     </style>
 
     <style name="Theme.PokeApi" parent="Base.Theme.PokeApi" />

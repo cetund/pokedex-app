@@ -65,6 +65,9 @@ dependencies {
     //palette for getting dominant image color
     implementation 'androidx.palette:palette-ktx:1.0.0'
 
+    //MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     // dependency for firebase core.
     //implementation 'com.google.firebase:firebase-core:21.1.1'
 
