@@ -100,6 +100,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void nextPage(int offset){
+
         isLoadingNextPage.postValue(true);
         pokemonListUseCase.getAll(new ApiServiceCallback<>() {
 

@@ -97,8 +97,10 @@ public class PokemonListAdapter extends RecyclerView.Adapter<PokemonListAdapter.
 
     }
     public void addPokemon(Results pokemon){
-        this.mValues.getResultsList().add(pokemon);
-        notifyItemInserted(this.mValues.getResultsList().size() - 1);
+        if(this.mValues.getResultsList().size()<1025){
+            this.mValues.getResultsList().add(pokemon);
+            notifyItemInserted(this.mValues.getResultsList().size() - 1);
+        }
     }
     public void setData(PokemonList data){
        for(Results pokemon : data.getResultsList()){

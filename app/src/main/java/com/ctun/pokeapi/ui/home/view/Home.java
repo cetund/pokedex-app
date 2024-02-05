@@ -70,9 +70,20 @@ public class Home extends AppCompatActivity {
             @Override
             protected void loadMoreItems() {
                 if (listAdapter != null) {
-                    isLoading = true;
-                    currentPage = (listAdapter.getItemCount());
-                    viewModel.nextPage(currentPage);
+
+
+
+                    if(listAdapter.getItemCount()<1025){
+
+                        if(listAdapter.getItemCount() == 1020){
+                            currentPage = 1025;
+                        }else{
+                            currentPage = (listAdapter.getItemCount());
+                        }
+
+                        isLoading = true;
+                        viewModel.nextPage(currentPage);
+                    }
                 }
             }
 

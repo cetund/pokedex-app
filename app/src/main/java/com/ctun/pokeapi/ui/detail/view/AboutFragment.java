@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +80,6 @@ public class AboutFragment extends Fragment {
         });
 
         viewModel.getPokemonSpecies().observe(getActivity(), flavorTextEntries -> {
-            Log.d("onResponse", "" + flavorTextEntries.getFlavorTextEntries().get(0).getDescription());
             FlavorText descripcion = new FlavorText();
 
             for (FlavorText entries : flavorTextEntries.getFlavorTextEntries()) {
@@ -95,7 +92,6 @@ public class AboutFragment extends Fragment {
 
         viewModel.getDamageRelations().observe(getActivity(), damageRelations -> {
             String damageText = "";
-            Log.d("damageResults", "" + damageRelations.getDamageRelations().getDoubleDamageFrom().size());
 
             for (Results results : damageRelations.getDamageRelations().getDoubleDamageFrom()) {
                 damageText = damageText + results.getName() + ", ";
