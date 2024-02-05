@@ -16,18 +16,20 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <img src="/presentation/previewanimation.gif" align="right" width="320"/>
 
 ## Tecnologias y librerias usadas
-- Minimum SDK level 24.
-- Hilt for dependency injection.
+- Lenguaje
+    - Java 17
+- Nivel minimo del SDK 24.
+- Dagger hilt 2 para inyeccion de dependencias.
 - JetPack
-    - Lifecycle - dispose of observing data when lifecycle state changes.
-    - ViewModel - UI related data holder, lifecycle aware.
-- Architecture
+    - Lifecycle - para controlar los datos de observación cuando cambie el estado del lifecycle
+    - ViewModel - para controlar datos relacionados con la UI, el mediador del lifecycle
+- Arquitectura
     - MVVM (View - DataBinding - ViewModel - Model)
     - Repository pattern.
     - Clean architecture
-- [Retrofit2 & OkHttp3](https://github.com/square/retrofit) - construct the REST APIs and paging network data.
-- [Glide](https://github.com/bumptech/glide), [GlidePalette](https://github.com/florent37/GlidePalette) - loading images.
-- [Material-Components](https://github.com/material-components/material-components-android) - Material design components like ripple animation, cardView.
+- [Retrofit2 & OkHttp3](https://github.com/square/retrofit) - para construir REST APIs y paginacion de datos.
+- [Glide](https://github.com/bumptech/glide), [GlidePalette](https://github.com/florent37/GlidePalette) - presentador de imagenes.
+- [Material-Components](https://github.com/material-components/material-components-android) - Componentes Material design como ripple animation, cardView.
 
 <br>
 <br>
@@ -42,7 +44,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <br>
 <br>
 
-## Arquitectura
+## Diseño de arquitectura
  MVVM con Clean Architecture
 
 <p align="center">
