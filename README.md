@@ -23,7 +23,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 - JetPack
     - Lifecycle - para controlar los datos de observación cuando cambie el estado del lifecycle
     - ViewModel - para controlar datos relacionados con la UI, el mediador del lifecycle
-- Architecture
+- Arquitectura
     - MVVM (View - DataBinding - ViewModel - Model)
     - Repository pattern.
     - Clean architecture
@@ -44,7 +44,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <br>
 <br>
 
-## Arquitectura
+## Diseño de arquitectura
  MVVM con Clean Architecture
 
 <p align="center">
