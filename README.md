@@ -17,6 +17,10 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 
 </br>
 </br>
+</br>
+</br>
+</br>
+</br>
 
 ## Tecnologias y librerias usadas
 - Lenguaje
