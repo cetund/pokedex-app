@@ -10,12 +10,14 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 </br>
 
 <p align="center">
-<img src="/presentation/preview_app.jpg"/>
+<img src="/presentation/home_prev.jpg"  width="220"/>
+<img src="/presentation/about_prev.jpg"  width="220"/>
+<img src="/presentation/stats_prev.jpg"  width="220"/>
+<img src="/presentation/evolution_prev.jpg"  width="220"/>
 </p>
 
-<p>
-  <img src="/presentation/previewanimation.gif" align="right" width="320"/>
-</p>
+<img src="/presentation/previewanimation.gif" align="right" width="320"/>
+
 
 </br>
 </br>
@@ -41,9 +43,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 
 <br/>
 </br>
-</br>
-</br>
-</br>
+
 
 <p>
 
