@@ -13,7 +13,6 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <img src="/presentation/home_prev.jpg"  width="220"/>
 <img src="/presentation/about_prev.jpg"  width="220"/>
 <img src="/presentation/stats_prev.jpg"  width="220"/>
-<img src="/presentation/evolution_prev.jpg"  width="220"/>
 </p>
 
 <img src="/presentation/previewanimation.gif" align="right" width="320"/>
