@@ -13,7 +13,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <img src="/presentation/preview_app.jpg"/>
 </p>
 <p>
-<img src="/presentation/previewanimation.gif" align="right" width="32%"/>
+<img src="/presentation/previewanimation.gif" align="right" width="320"/>
 
 ## Tecnologias y librerias usadas
 - Lenguaje
