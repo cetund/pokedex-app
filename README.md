@@ -13,7 +13,7 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <img src="/presentation/preview_app.jpg"/>
 </p>
 <p>
-<img src="/presentation/previewanimation.gif" align="right" width="25%"/>
+<img src="/presentation/previewanimation.gif" align="right" width="32%"/>
 
 ## Tecnologias y librerias usadas
 - Lenguaje
@@ -33,11 +33,26 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 </p>
 
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+<p>
 
 ## Diseño de arquitectura
-MVVM con Clean Architecture  
-<p align="center">
+MVVM con Clean Architecture
 <img src="/presentation/arch_prev_2.png"/>
+
 </p>
+
 
 
