@@ -1,187 +1,83 @@
 package com.ctun.pokeapi.ui.home.viewmodel;
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.ctun.pokeapi.data.PokemonRepository;
 import com.ctun.pokeapi.data.model.PokemonList;
-import com.ctun.pokeapi.data.model.Results;
 import com.ctun.pokeapi.domain.GetPokemonListUseCase;
 import com.ctun.pokeapi.domain.SearchPokemonUseCase;
-import com.ctun.pokeapi.utils.ApiServiceCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-import javax.xml.transform.Result;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class HomeViewModel extends ViewModel {
-    MutableLiveData<Boolean> isLoadingHome;
-    MutableLiveData<PokemonList> pokemonListData;
-    MutableLiveData<Boolean> isRequestFailure;
-    MutableLiveData<Boolean> isRefreshing;
-    MutableLiveData<Boolean> isLoadingNextPage;
-    MutableLiveData<Boolean> isLastPage;
-    MutableLiveData<Boolean> isSearch;
+    LiveData<PokemonList> pokemonListData;
+    LiveData<Boolean> isLoadingHome;
+    LiveData<Boolean> isRequestFailure;
+    LiveData<Boolean> isRefreshing;
+    LiveData<Boolean> isLoadingNextPage;
+    LiveData<Boolean> isLastPage;
+    LiveData<Boolean> isSearch;
 
     @Inject
     GetPokemonListUseCase pokemonListUseCase;
     @Inject
     SearchPokemonUseCase searchPokemonUseCase;
 
+
     @Inject
-    public HomeViewModel(){
-        pokemonListData = new MutableLiveData<>();
-        isLoadingHome = new MutableLiveData<>();
-        isRequestFailure = new MutableLiveData<>();
-        isRefreshing = new MutableLiveData<>();
-        isLoadingNextPage = new MutableLiveData<>();
-        isLastPage = new MutableLiveData<>();
-        isSearch = new MutableLiveData<>();
+    public HomeViewModel(PokemonRepository repository){
+        pokemonListData = repository.getPokemonList();
+        isLoadingHome =repository.getIsLoadingHome();
+        isRequestFailure = repository.getIsRequestFailure();
+        isRefreshing = repository.getIsRefreshing();
+        isLoadingNextPage = repository.getIsLoadingNextPage();
+        isLastPage = repository.getIsLastPage();
+        isSearch = repository.getIsSearch();
     }
 
-    private int offset = 0;
-
     public void onCreate(){
-        isLoadingHome.postValue(true);
-
-        pokemonListUseCase.getAll(new ApiServiceCallback<>() {
-
-            @Override
-            public void onSuccess(PokemonList response) {
-                if(response!=null){
-                    isLastPage.postValue(false);
-                    pokemonListData.postValue(response);
-                    isLoadingHome.postValue(false);
-                    isRequestFailure.postValue(false);
-                }else {
-                    isLoadingHome.postValue(false);
-                    isRequestFailure.postValue(true);
-                }
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isLoadingHome.postValue(false);
-                isRequestFailure.postValue(true);
-            }
-        }, 0);
+        pokemonListData = pokemonListUseCase.getAll(0);
     }
 
     public void refreshList(){
-        isRefreshing.postValue(true);
-        isSearch.postValue(false);
-        pokemonListUseCase.getAll(new ApiServiceCallback<>() {
-
-            @Override
-            public void onSuccess(PokemonList response) {
-                if(response!=null){
-                    isLastPage.postValue(false);
-                    pokemonListData.postValue(response);
-                    isRefreshing.postValue(false);
-                    isRequestFailure.postValue(false);
-                }else {
-                    isRefreshing.postValue(false);
-                    isRequestFailure.postValue(true);
-                }
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isRefreshing.postValue(false);
-                isRequestFailure.postValue(true);
-            }
-        }, 0);
+        pokemonListData = pokemonListUseCase.refreshList(0);
     }
 
     public void nextPage(int offset){
-
-        isLoadingNextPage.postValue(true);
-        pokemonListUseCase.getAll(new ApiServiceCallback<>() {
-
-            @Override
-            public void onSuccess(PokemonList response) {
-                if(response!=null){
-                    if(response.getNext()==null){
-                        isLastPage.postValue(true);
-                    }
-                    pokemonListData.postValue(response);
-                    isLoadingNextPage.postValue(false);
-                    isRequestFailure.postValue(false);
-                }else {
-                    isLoadingNextPage.postValue(false);
-                    isRequestFailure.postValue(true);
-                }
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isLoadingNextPage.postValue(false);
-                isRequestFailure.postValue(true);
-            }
-        }, offset);
+        pokemonListData = pokemonListUseCase.nextPage(offset);
     }
 
     public void searchPokemon(String name){
-        isLoadingHome.postValue(true);
-        searchPokemonUseCase.searchPokemon(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(Results results) {
-                isLoadingHome.postValue(false);
-                isSearch.postValue(false);
-
-                PokemonList auxList = new PokemonList();
-
-                if(results!=null){
-                    isSearch.postValue(true);
-                    List<Results> result = new ArrayList<>();
-                    result.add(results);
-                    auxList.setResultsList(result);
-                    isRequestFailure.postValue(false);
-                }
-
-                pokemonListData.postValue(auxList);
-
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isRequestFailure.postValue(true);
-                isSearch.postValue(false);
-                isLoadingHome.postValue(false);
-            }
-        }, name);
+        searchPokemonUseCase.searchPokemon(name);
     }
-
-    public MutableLiveData<PokemonList> getPokemonListData() {
+    public LiveData<PokemonList> getPokemonListData() {
         return pokemonListData;
     }
-    public MutableLiveData<Boolean> getIsLoadingHome(){
+
+    public LiveData<Boolean> getIsLoadingHome(){
         return isLoadingHome;
     }
 
-    public MutableLiveData<Boolean> getIsRequestFailure(){
+    public LiveData<Boolean> getIsRequestFailure(){
         return isRequestFailure;
     }
-    public MutableLiveData<Boolean> getIsRefreshing(){
+    public LiveData<Boolean> getIsRefreshing(){
         return isRefreshing;
     }
 
-    public MutableLiveData<Boolean> getIsLoadingNextPage(){
+    public LiveData<Boolean> getIsLoadingNextPage(){
         return isLoadingNextPage;
     }
 
-    public MutableLiveData<Boolean> getIsLastPage(){
+    public LiveData<Boolean> getIsLastPage(){
         return isLastPage;
     }
 
-    public MutableLiveData<Boolean> getIsSearch(){
+    public LiveData<Boolean> getIsSearch(){
         return isSearch;
     }
 }

@@ -2,9 +2,11 @@ package com.ctun.pokeapi.ui.detail.viewmodel;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.ctun.pokeapi.data.PokemonRepository;
 import com.ctun.pokeapi.data.model.EvolutionChain;
 import com.ctun.pokeapi.data.model.Species;
 import com.ctun.pokeapi.data.model.PokemonDetail;
@@ -21,140 +23,63 @@ public class PokemonDetailViewModel extends ViewModel {
     @Inject
     GetPokemonDetailUseCase getPokemonDetailUseCase;
 
-    private MutableLiveData<PokemonDetail> detail;
-    private MutableLiveData<Boolean> isLoading;
-    private MutableLiveData<Boolean> isRequestFailure;
+    private LiveData<PokemonDetail> detail;
+    private LiveData<Boolean> isLoading;
+    private LiveData<Boolean> isRequestFailure;
 
-    private MutableLiveData<Species> pokemonSpecies;
+    private LiveData<Species> pokemonSpecies;
 
-    private MutableLiveData<TypeDetail> damageRelations;
+    private LiveData<TypeDetail> damageRelations;
 
-    private MutableLiveData<EvolutionChain> evolutionChain;
+    private LiveData<EvolutionChain> evolutionChain;
 
     @Inject
-    public PokemonDetailViewModel() {
+    public PokemonDetailViewModel(PokemonRepository repository) {
 
-        detail = new MutableLiveData<>();
-        isLoading = new MutableLiveData<>();
-        isRequestFailure = new MutableLiveData<>();
-        pokemonSpecies = new MutableLiveData<>();
-        damageRelations = new MutableLiveData<>();
-        evolutionChain = new MutableLiveData<>();
+        detail = repository.getPokemonDetail();
+        isLoading = repository.getIsLoading();
+        isRequestFailure = repository.getIsRequestFailure();
+        pokemonSpecies = repository.getSpecies();
+        damageRelations = repository.getTypeDetail();
+        evolutionChain = repository.getEvolutionChain();
     }
 
     public void getPokemonDetail(int id) {
-        isRequestFailure.postValue(false);
-        isLoading.postValue(true);
-        getPokemonDetailUseCase.getPokemonDetail(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(PokemonDetail pokemonDetail) {
-                isLoading.postValue(false);
-
-                if (pokemonDetail != null) {
-                    detail.postValue(pokemonDetail);
-                } else {
-                    isRequestFailure.postValue(true);
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Log.d("ViewModelFailure", "" + error);
-                isRequestFailure.postValue(true);
-                isLoading.postValue(false);
-            }
-        }, id);
+       detail = getPokemonDetailUseCase.getPokemonDetail(id);
     }
 
     public void getPokemonSpecies(int id) {
-        isRequestFailure.postValue(false);
-        isLoading.postValue(true);
-        getPokemonDetailUseCase.getPokemonSpecies(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(Species species) {
-                isLoading.postValue(false);
-
-                if (species != null) {
-                    pokemonSpecies.postValue(species);
-                } else {
-                    isRequestFailure.postValue(true);
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isRequestFailure.postValue(true);
-                isLoading.postValue(false);
-            }
-        }, id);
+        pokemonSpecies = getPokemonDetailUseCase.getPokemonSpecies(id);
     }
     public void getPokemonDamageRelation(int id) {
-        isRequestFailure.postValue(false);
-        isLoading.postValue(true);
-        getPokemonDetailUseCase.getPokemonDamageRelation(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(TypeDetail response) {
-                isLoading.postValue(false);
-
-                if (response != null) {
-                    damageRelations.postValue(response);
-                } else {
-                    isRequestFailure.postValue(true);
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isRequestFailure.postValue(true);
-                isLoading.postValue(false);
-            }
-        }, id);
+        damageRelations = getPokemonDetailUseCase.getPokemonDamageRelation(id);
     }
 
     public void getPokemonEvolution(int id) {
-        isRequestFailure.postValue(false);
-        isLoading.postValue(true);
-        getPokemonDetailUseCase.getPokemonEvolutionChain(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(EvolutionChain response) {
-                isLoading.postValue(false);
-
-                if (response != null) {
-                    evolutionChain.postValue(response);
-                } else {
-                    isRequestFailure.postValue(true);
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                isRequestFailure.postValue(true);
-                isLoading.postValue(false);
-            }
-        }, id);
+       evolutionChain = getPokemonDetailUseCase.getPokemonEvolutionChain(id);
     }
 
 
-    public MutableLiveData<PokemonDetail> getDetail(){
+    public LiveData<PokemonDetail> getDetail(){
         return detail;
     }
 
-    public MutableLiveData<Boolean> getIsLoading(){
+    public LiveData<Boolean> getIsLoading(){
         return isLoading;
     }
 
-    public MutableLiveData<Species> getPokemonSpecies (){
+    public LiveData<Species> getPokemonSpecies (){
         return pokemonSpecies;
     }
 
-    public MutableLiveData<Boolean> getIsRequestFailure() {
+    public LiveData<Boolean> getIsRequestFailure() {
         return isRequestFailure;
     }
-    public MutableLiveData<TypeDetail> getDamageRelations(){
+    public LiveData<TypeDetail> getDamageRelations(){
         return damageRelations;
     }
 
-    public MutableLiveData<EvolutionChain> getEvolutionChain(){
+    public LiveData<EvolutionChain> getEvolutionChain(){
         return evolutionChain;
     }
 }

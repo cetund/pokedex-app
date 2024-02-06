@@ -2,6 +2,7 @@ package com.ctun.pokeapi.di;
 
 import static com.ctun.pokeapi.utils.Constants.API_URL;
 
+import com.ctun.pokeapi.data.PokemonRepository;
 import com.ctun.pokeapi.data.network.PokemonApiClient;
 
 import javax.inject.Singleton;
@@ -44,5 +45,6 @@ public class NetworkModule {
     public PokemonApiClient provideApiClient(Retrofit retrofit){
         return retrofit.create(PokemonApiClient.class);
     }
+
 
 }

@@ -1,12 +1,14 @@
 package com.ctun.pokeapi.domain;
 
+import androidx.lifecycle.LiveData;
+
 import com.ctun.pokeapi.data.PokemonRepository;
 import com.ctun.pokeapi.data.model.PokemonList;
-import com.ctun.pokeapi.utils.ApiServiceCallback;
 
 import javax.inject.Inject;
 
 public class GetPokemonListUseCase {
+
     @Inject
     PokemonRepository repository;
 
@@ -14,18 +16,16 @@ public class GetPokemonListUseCase {
     public GetPokemonListUseCase(){
     }
 
-    public void getAll(ApiServiceCallback<PokemonList> callback, int offset){
-        repository.getAll(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(PokemonList response) {
-                callback.onSuccess(response);
-            }
+    public LiveData<PokemonList> getAll(int offset){
+        return  repository.getAll(offset);
+    }
 
-            @Override
-            public void onFailure(String error) {
-                callback.onFailure(error);
-            }
-        }, offset);
+    public LiveData<PokemonList> refreshList(int offset){
+        return repository.refreshList(offset);
+    }
+
+    public LiveData<PokemonList> nextPage(int offset){
+        return repository.nextPage(offset);
     }
 
 }
