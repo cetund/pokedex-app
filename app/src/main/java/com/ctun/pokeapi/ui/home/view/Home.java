@@ -12,14 +12,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-
+import com.ctun.pokeapi.data.model.PokemonList;
 import com.ctun.pokeapi.databinding.ActivityHomeBinding;
 import com.ctun.pokeapi.ui.home.adapter.PokemonListAdapter;
 import com.ctun.pokeapi.ui.detail.view.PokemonDetailActivity;
 import com.ctun.pokeapi.ui.home.viewmodel.HomeViewModel;
 import com.ctun.pokeapi.utils.MultiClickPreventer;
 import com.ctun.pokeapi.utils.PaginationScrollListener;
-
 import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -35,6 +34,8 @@ public class Home extends AppCompatActivity {
 
     private Boolean isSearch = false;
     private int currentPage = 0;
+
+    private PokemonList pokeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +56,10 @@ public class Home extends AppCompatActivity {
 
         getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
 
+        viewModel.onCreate();
         setListeners();
         setObservers();
 
-        viewModel.onCreate();
 
     }
 
@@ -70,8 +71,6 @@ public class Home extends AppCompatActivity {
             @Override
             protected void loadMoreItems() {
                 if (listAdapter != null) {
-
-
 
                     if(listAdapter.getItemCount()<1025){
 
@@ -120,8 +119,12 @@ public class Home extends AppCompatActivity {
 
     private void setObservers() {
         viewModel.getPokemonListData().observe(this, response -> {
+            pokeList = response;
+
             if (listAdapter == null) {
-                listAdapter = new PokemonListAdapter(this, response, (view, position, imageView) -> {
+
+
+                listAdapter = new PokemonListAdapter(this, pokeList, (view, position, imageView) -> {
                     MultiClickPreventer.preventMultiClick(view);
 
                     ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
@@ -135,7 +138,7 @@ public class Home extends AppCompatActivity {
 
                 binding.recyclerPokemonList.setAdapter(listAdapter);
             } else {
-                listAdapter.setData(response);
+                listAdapter.setData(pokeList);
             }
 
             if (response.getResultsList() == null) {
@@ -148,6 +151,7 @@ public class Home extends AppCompatActivity {
         });
 
         viewModel.getIsLoadingHome().observe(this, isLoading -> {
+
             binding.globalProgressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             binding.inputSearch.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             binding.refreshHome.setVisibility(isLoading ? View.GONE : View.VISIBLE);

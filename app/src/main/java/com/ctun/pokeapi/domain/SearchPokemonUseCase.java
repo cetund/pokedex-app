@@ -1,8 +1,9 @@
 package com.ctun.pokeapi.domain;
 
+import androidx.lifecycle.LiveData;
+
 import com.ctun.pokeapi.data.PokemonRepository;
-import com.ctun.pokeapi.data.model.Results;
-import com.ctun.pokeapi.utils.ApiServiceCallback;
+import com.ctun.pokeapi.data.model.PokemonList;
 
 import javax.inject.Inject;
 
@@ -13,17 +14,7 @@ public class SearchPokemonUseCase {
     @Inject
     public SearchPokemonUseCase(){}
 
-    public void searchPokemon(ApiServiceCallback<Results> callback, String name){
-        repository.searchPokemon(new ApiServiceCallback<>() {
-            @Override
-            public void onSuccess(Results results) {
-                callback.onSuccess(results);
-            }
-
-            @Override
-            public void onFailure(String error) {
-                callback.onFailure(error);
-            }
-        }, name);
+    public LiveData<PokemonList> searchPokemon(String name){
+        return repository.searchPokemon(name);
     }
 }
