@@ -12,8 +12,8 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <p align="center">
 <img src="/presentation/preview_app.jpg"/>
 </p>
-
-<img src="/presentation/previewanimation.gif" align="right" width="320"/>
+<p>
+<img src="/presentation/previewanimation.gif" align="right" width="25%"/>
 
 ## Tecnologias y librerias usadas
 - Lenguaje
@@ -30,23 +30,14 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 - [Retrofit2 & OkHttp3](https://github.com/square/retrofit) - para construir REST APIs y paginacion de datos.
 - [Glide](https://github.com/bumptech/glide), [GlidePalette](https://github.com/florent37/GlidePalette) - presentador de imagenes.
 - [Material-Components](https://github.com/material-components/material-components-android) - Componentes Material design como ripple animation, cardView.
+</p>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<br/>
 
 ## Diseño de arquitectura
- MVVM con Clean Architecture
-
+MVVM con Clean Architecture  
 <p align="center">
 <img src="/presentation/arch_prev_2.png"/>
 </p>
+
+
