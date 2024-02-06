@@ -15,6 +15,9 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 <p>
 <img src="/presentation/previewanimation.gif" align="right" width="320"/>
 
+</br>
+</br>
+
 ## Tecnologias y librerias usadas
 - Lenguaje
     - Java 17
@@ -33,18 +36,10 @@ Aplicación demostrativa para obtener la informacion base de los pokemon utiliza
 </p>
 
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
+</br>
+</br>
+</br>
+</br>
 
 <p>
 
